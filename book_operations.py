@@ -26,7 +26,7 @@ def book_operation(library):
         elif choice == '2':
             check_out()            
         elif choice == '3':
-            return_book()            
+            check_in()            
         elif choice == '4':
             search_book()
         elif choice == '5':
@@ -61,6 +61,6 @@ def search_book(self,title):#search for a book
         if book.title == title:
             return book
         return None
-def display_book(library)#display all books
+def display_book(library):#display all books
      for book in library.values():
          print(f"Title: {book.get_title()} Author: {book.get_author()} ")
