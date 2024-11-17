@@ -11,4 +11,11 @@ def main():
         elif choice == '3':
             author_operations()
             pass
+        elif choice == '4':
+            break
+        else: print("Invalid choice. Please try again.")
+        
+        
+if __name__ == "__main__":
+    main()
             
