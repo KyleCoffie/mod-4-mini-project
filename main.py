@@ -7,15 +7,16 @@ import User_operations
 
 def main():
     library = {}
-    current_loans = []
+    current_loans = {}
+    users = {}
     while True:
         print("\n1. Book Operations. \n2. User Operations. \n3. Author Operations \n4. Quit")
         choice = input("Choose an option: ")
         if choice == '1':
-            book_operations()
+            book_operations.book_operation(library,current_loans)
             
         elif choice == '2':
-            User_operations()
+            User_operations.user_operations(users)
             
         elif choice == '3':
             author()
