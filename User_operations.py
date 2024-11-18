@@ -30,7 +30,7 @@ def user_operations(users):
                 user_name = input("Enter user name:")
                 if user_name:
                     user = User(user_name)
-                    users.append(user)
+                    users['username'] = user_name
                     print(f"{user.username} has been added in the system with Library ID: {user.library_id}")
                 else: print("Error : User_name cannot be empty.")    
             elif choice == '2':
