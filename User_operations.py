@@ -6,6 +6,7 @@ users = {}
 class User:
     def __init__ (self,username):
         self.username = username
+        
         self.library_id = generate_user_id()
 def generate_user_id():
     # Generate a random 2-digit number (between 10 and 99 inclusive)
@@ -23,34 +24,41 @@ def generate_user_id():
 def user_operations(users):
     
     while True:
-        print("\n1. Add a user. \n2. View user details. \n3. Display all users \n4. Quit")
+        print("\n1. Add a user. \n2. View user details. \n3. Display all users \n4. Delete user\n5. Quit")
         choice = input("Choose an option: ")
         try:
             if choice == '1':
                 user_name = input("Enter user name:")
                 if user_name:
                     user = User(user_name)
-                    users['username'] = user_name
+                    users[user_name] = user#key is the username value is object user
                     print(f"{user.username} has been added in the system with Library ID: {user.library_id}")
-                else: print("Error : User_name cannot be empty.")    
+                else: print("Error : Username cannot be empty.")    
+                print(users)
             elif choice == '2':
-                selection = input("Enter the username to view details")
-                display_user_details(users,selection)
-                
+                selection = input("Enter the username to view details: ")
+                display_user_details(users,selection)                
                 
             elif choice == '3':
                 display_users(users)
                 
-            elif choice == '4':
+            elif choice =='4':
+                user_to_delete = input("Enter the username to delete:")
+                       
+                for user in users.values():
+                    if user_to_delete == user_name:
+                        users.pop(user_name)
+                        print(f"User {user_to_delete} has been deleted.")
+                        break
+                    else: print(f"No userfound with username {user_to_delete}")
+            
+            elif choice == '5':
                 break
             else: print("Invalid choice. Please try again.")
         except Exception as e:
             print(f"Error has occured: {e}")
-# def add_user(user,library_id):
-#     users.append({'username': user, 'library ID': library_id  })
-    
-def display_user_details(users, library_id):
-    for user in users:
+def display_user_details(users,username):
+    for user in users.values():
         if user.username == username:
             print(f"Username: {user.username}, Library ID: {user.library_id}")
             return
@@ -59,7 +67,7 @@ def display_user_details(users, library_id):
 def display_users(users):
     if users:
         print("All users:")
-        for user in users:
+        for user in users.values():
             print(f"Username: {user.username}, Library ID: {user.library_id}")
     else: print("No users in the system.")
    
