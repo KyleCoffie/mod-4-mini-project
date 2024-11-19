@@ -48,23 +48,27 @@ class Book:
     def check_out(library,current_loans):#Borrow a book
         isbn = input("Enter the ISBN of the book to borrow: ")
         user = input("Enter user name: ")
-        if isbn in library and library[isbn]:
+        if isbn in library and library[isbn].is_available():
             current_loans[isbn] = user
-            print(f"Book {library[isbn].get_title()} checked out to {user}")
+            library[isbn].borrow_book()
+            print(f"Book '{library[isbn].get_title()}' checked out to {user}")
         else: print("Book not in our system.")
 
     def search_book(library):#search for a book
         title = input("Enter the title to search for: ")
         book_found = False
         for book in library.values():
-            if book.get_title() == title:
-                print(f"Title: {book.get_title()} Author: {book.get_author()}  ")#TODO: add is available or not also provide isbn
+            if book.get_title().lower() == title.lower():
+                availability = "Available" if book.is_available() else "Not Available"
+                print(f"Title: {book.get_title()} Author: {book.get_author()} ISBN: {book.get_isbn()} Status: {availability}  ")#TODO: add is available or not also provide isbn
                 book_found = True
         if not book_found: print("Book not found")    
                 
     def display_book(library):#display all books
-        for book in library.values():
-            print(f"Title: {book.get_title()} Author: {book.get_author()} ISBN: {book.get_isbn()}")
+        if library:
+            for book in library.values():
+                availability = "Available" if book.is_available() else "Not Available"
+                print(f"Title: {book.get_title()} Author: {book.get_author()} ISBN: {book.get_isbn()} Status: {availability}")
 
     def book_operation(library,current_loans):
         while True:
@@ -86,5 +90,6 @@ class Book:
                 else: print("Invalid choice. Please try again.")
             except Exception as e:
                 print(f"An error has occured: {e} ")
-                
-Book.book_operation()
+library = {}
+current_loans = {}                
+Book.book_operation(library,current_loans)

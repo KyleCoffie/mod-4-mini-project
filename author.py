@@ -1,4 +1,3 @@
-catalog ={}
 
 
 class Author:
@@ -19,24 +18,24 @@ class Author:
         # save author deets to catalog 
         catalog[author] = info
         # or
-        print(f"Author: {author} added to catalog with deets. ")
+        print(f"Author: {author} added to catalog with details. ")
         # return info so you can use info if your if choice == '1' 
         return info 
 
-    def view_author_details(author):
-        for info in catalog.values():
-            if info.catalog == author:
-                print(f"Author: {info.author}, Birthday: {info.birthday}, Birthplace: {info.birthplace}, Book written: {info.one_book}")
+    def view_author_details(catalog,author_name):
+        if author_name in catalog:
+            author = catalog[author_name]
+            print(f"Author: {author.author}, Birthday: {author.birthday}, Birthplace: {author.birthplace}, Book written: {author.one_book}")
                 
-            else: print(f"Author {author} not found")
-    def display_all(info):
+        else: print(f"Author {author} not found")
+    def display_all(catalog):
         if catalog:
-            print("All authors:")
+            print("All authors in the catalog:")
             for author in catalog.values():
-                print(f"Author: {author} ")
+                print(f"Author: {author.author}, Book: {author.one_book} ")
         else: print("No authors in the system.")
 
-    def author_operations():
+    def author_operations(catalog):
         while True:
             print("\n1. Add a new author. \n2. View author details. \n3. Display all authors \n4. Quit")
             choice = input("Choose an option: ")
@@ -45,15 +44,15 @@ class Author:
                     # add author deets 
                     # save author deets to catalog 
                     # info = add_author_dets(info) 
-                    Author.add_author_dets() 
+                    Author.add_author_dets(catalog) 
                                 
                 
                 elif choice == '2':
                     selection = input("Enter the author to view details: ").title()
-                    Author.view_author_details(selection)
+                    Author.view_author_details(catalog, selection)
                     
                 elif choice == '3':
-                    Author.display_all()
+                    Author.display_all(catalog)
                     
                 elif choice == '4':
                     print("Thankyou for using this program.")
@@ -61,5 +60,6 @@ class Author:
                 else: print("Invalid choice Please try again.")
             except Exception as e:
                 print(f"An error has occured: {e}")
-                
-Author.author_operations()
+catalog ={}
+               
+Author.author_operations(catalog)

@@ -8,7 +8,7 @@ class User:
         self.username = username
         
         self.library_id = self.generate_user_id()
-    def generate_user_id():
+    def generate_user_id(self):
         # Generate a random 2-digit number (between 10 and 99 inclusive)
         number = random.randint(10, 99)
         
@@ -34,7 +34,7 @@ class User:
                         users[user_name] = user#key is the username value is object user
                         print(f"{user.username} has been added in the system with Library ID: {user.library_id}")
                     else: print("Error : Username cannot be empty.")    
-                    print(users)
+                    #print(users)
                 elif choice == '2':
                     selection = input("Enter the username to view details: ")
                     User.display_user_details(users,selection)                
@@ -70,4 +70,5 @@ class User:
             for user in users.values():
                 print(f"Username: {user.username}, Library ID: {user.library_id}")
         else: print("No users in the system.")
-User.user_operations()
+users = {}       
+User.user_operations(users)
