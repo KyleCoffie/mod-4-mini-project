@@ -60,6 +60,8 @@ class Author:
                 else: print("Invalid choice Please try again.")
             except Exception as e:
                 print(f"An error has occured: {e}")
-catalog ={}
+
+if __name__ == "__main__":
+    catalog ={}
                
-Author.author_operations(catalog)
+    Author.author_operations(catalog)

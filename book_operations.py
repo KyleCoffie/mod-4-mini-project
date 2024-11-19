@@ -90,6 +90,9 @@ class Book:
                 else: print("Invalid choice. Please try again.")
             except Exception as e:
                 print(f"An error has occured: {e} ")
-library = {}
-current_loans = {}                
-Book.book_operation(library,current_loans)
+
+if __name__ == "__main__":
+    library = {}
+    current_loans = {}                
+    Book.book_operation(library,current_loans)
+    

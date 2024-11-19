@@ -1,6 +1,6 @@
-import author
-import book_operations
-import User_operations
+from author import Author
+from book_operations import Book
+from User_operations import User
 
 library = {}
 current_loans = {}
@@ -15,13 +15,13 @@ def main():
         print("\n1. Book Operations. \n2. User Operations. \n3. Author Operations \n4. Quit")
         choice = input("Choose an option: ")
         if choice == '1':
-            book_operations.Book.book_operation(library,current_loans)
+            Book.book_operation(library,current_loans)
             
         elif choice == '2':
-            User_operations.User.user_operations(users)
+            User.user_operations(users)
             
         elif choice == '3':
-            author.Author.author_operations(catalog)
+            Author.author_operations(catalog)
             
         elif choice == '4':
             print("Goodbye thank you for using this program")

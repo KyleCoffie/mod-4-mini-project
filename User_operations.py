@@ -70,5 +70,7 @@ class User:
             for user in users.values():
                 print(f"Username: {user.username}, Library ID: {user.library_id}")
         else: print("No users in the system.")
-users = {}       
-User.user_operations(users)
+if __name__ == "__main__":
+    users = {}       
+    User.user_operations(users)
+    
