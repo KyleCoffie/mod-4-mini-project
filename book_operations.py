@@ -86,6 +86,7 @@ class Book:
                 elif choice == '5':
                     Book.display_book(library)
                 elif choice == '6':
+                    print("Thank you for using this Book program...")
                     break       
                 else: print("Invalid choice. Please try again.")
             except Exception as e:

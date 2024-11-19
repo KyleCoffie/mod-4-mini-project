@@ -21,6 +21,19 @@ class User:
         return library_id   
     #TODO look at where im getting variablesfrom and decide if i want to patch them thru that way.
     #reviewonclasses
+    def display_user_details(users,username):
+        for user in users.values():
+            if user.username == username:
+                print(f"Username: {user.username}, Library ID: {user.library_id}")
+                return
+        print(f"User {username} not found")
+            
+    def display_users(users):
+        if users:
+            print("All users:")
+            for user in users.values():
+                print(f"Username: {user.username}, Library ID: {user.library_id}")
+        else: print("No users in the system.")
     def user_operations(users):
         
         while True:
@@ -53,23 +66,11 @@ class User:
                         else: print(f"No user found with username {user_to_delete}")
                 
                 elif choice == '5':
+                    print("Thank you for using the User program...")
                     break
                 else: print("Invalid choice. Please try again.")
             except Exception as e:
                 print(f"Error has occured: {e}")
-    def display_user_details(users,username):
-        for user in users.values():
-            if user.username == username:
-                print(f"Username: {user.username}, Library ID: {user.library_id}")
-                return
-        print(f"User {username} not found")
-            
-    def display_users(users):
-        if users:
-            print("All users:")
-            for user in users.values():
-                print(f"Username: {user.username}, Library ID: {user.library_id}")
-        else: print("No users in the system.")
 if __name__ == "__main__":
     users = {}       
     User.user_operations(users)

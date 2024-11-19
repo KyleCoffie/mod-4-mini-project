@@ -1,5 +1,4 @@
 
-
 class Author:
     def __init__(self,author,birthday,birthplace,one_book):
         self.author = author
@@ -8,7 +7,7 @@ class Author:
         self.one_book = one_book
         
         
-    def add_author_dets(self):    
+    def add_author_dets(catalog):    
         author = input("Enter the name of the author: ").title()
         birthday = input("Enter the author's birthday: ") 
         birthplace = input("Enter the author's birthplace: ")
@@ -55,7 +54,7 @@ class Author:
                     Author.display_all(catalog)
                     
                 elif choice == '4':
-                    print("Thankyou for using this program.")
+                    print("Thank you for using this Author program...")
                     break
                 else: print("Invalid choice Please try again.")
             except Exception as e:
