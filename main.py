@@ -19,7 +19,7 @@ def main():
             User_operations.user_operations(users)
             
         elif choice == '3':
-            author()
+            author.author_operations(catalog)
             
         elif choice == '4':
             break
