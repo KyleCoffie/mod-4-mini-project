@@ -20,7 +20,7 @@ def main():
             User_operations.user_operations(users)
             
         elif choice == '3':
-            author.author_operations(info)
+            author.author_operations(catalog)
             
         elif choice == '4':
             print("Goodbye thank you for using this program")
