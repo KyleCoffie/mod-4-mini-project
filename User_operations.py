@@ -50,7 +50,7 @@ def user_operations(users):
                         users.pop(user_name)
                         print(f"User {user_to_delete} has been deleted.")
                         break
-                    else: print(f"No userfound with username {user_to_delete}")
+                    else: print(f"No user found with username {user_to_delete}")
             
             elif choice == '5':
                 break
