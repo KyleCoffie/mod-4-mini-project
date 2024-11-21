@@ -1,0 +1,1 @@
+From the main menu there are 3 operations that youcan interact with. Book, User, and Author. Inside of these menus you have additional menus to manipulate information. Quiting inside of the additional menus will take you back to the main menu.
