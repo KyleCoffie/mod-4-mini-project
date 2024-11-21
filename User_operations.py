@@ -58,12 +58,11 @@ class User:
                 elif choice =='4':
                     user_to_delete = input("Enter the username to delete:")
                         
-                    for user in users.values():
-                        if user_to_delete == user_name:
-                            users.pop(user_name)
+                    if user_to_delete in users:
+                            users.pop(user_to_delete)
                             print(f"User {user_to_delete} has been deleted.")
-                            break
-                        else: print(f"No user found with username {user_to_delete}")
+                            
+                    else: print(f"No user found with username {user_to_delete}")
                 
                 elif choice == '5':
                     print("Thank you for using the User program...")
