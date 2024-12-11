@@ -1,99 +1,102 @@
-class Book:
-    def __init__(self,title,author,isbn):
-        self.__title = title
-        self.__author = author
-        self.__is_available = True
-        self.__isbn = isbn
-
-    def get_title(self):
-        return self.__title
-    
-    def is_available(self):
-        return self.__is_available
-    
-    def borrow_book(self):
-        if self.__is_available:
-            self.__is_available = False
-            return True
-        return False
-    
-    def get_author(self):
-        return self.__author
-    
-    def get_isbn(self):
-        return self.__isbn
-    
-    def return_book(self):#return a book
-        self.__is_available = True
-
-        
+from connect_sql import connect_database
+import random
+import string
+  
 # Book operations 
-    def add_book(library):#add a new book
-        title = input("Enter book title: ").title()
-        author = input("Enter book author: ").title()
-        isbn = input("Enter ISBN: ")
-        book = Book(title,author,isbn)# book is an object of the Book class
-        library[isbn] = book#able to search for book using the title
-        print(f"Book {title} added successfully. ")
-        return book
+def add_book(cursor,conn):#add a new book
+    
+    title = input("Enter the book title: ")
+    author = input("Enter the author: ")
+    isbn = ''.join(random.choice(string.ascii_lowercase) for _ in range(6)) 
+    publication_date = input("Enter the publication date in the format (YYYY-MM-DD): ")
+    available = True
+    query = "INSERT into books (title,author,isbn,publication_date,availability) VALUES(%s, %s,%s,%s,%s)"
+    cursor.execute(query,(title,author,isbn,publication_date,available))
+    conn.commit()
+    print("New book added successfully. ")
+    
+def check_out(cursor,conn):#Borrow a book
+    try:
+        user_id = input("Enter your user_id: ")
+        book_id = input("Enter the book_id for the book to borrow: ")
+        borrow_date = input("Enter the borrow date: Format (YYYY-MM-DD): ")
+        return_date = input("Enter the date to return the book: Format (YYYY-MM-DD):")
+        availability = False
+        query1 = "INSERT into borrowed_books (user_id,book_id,borrow_date,return_date,availability) VALUES (%s,%s,%s,%s,%s)"
+        cursor.execute(query1,(user_id,book_id,borrow_date,return_date,availability))
+        conn.commit()
+        query2 = "UPDATE books SET availibilty = '0' WHERE book_id = %s"
+        cursor.execute(query2,(book_id,))
+        conn.commit()
+        print(f"User_id: {user_id} successfully checked out book with id number: {book_id}")
+    except Exception as e: print(f"Error has occured {e}\n Please make sure your are using a valid user_id,book_id nd correct date format.")
         
-    def check_in(library,current_loans):  
-        isbn = input("Enter ISBN of the book to return: ")
-        if isbn in library and isbn in current_loans:
-            library[isbn].return_book()
-            del current_loans[isbn]
-            print(f"Book {library[isbn].get_title()} returned")
-        else: print("Book not in our system.")
+def check_in(cursor,conn):  
+    try:        
+        user_id = input("Enter your user_id: ")
+        book_id = input("Enter the book_id for the book to return: ")
+        query = "DELETE FROM borrowed_books WHERE user_id = %s AND book_id = %s"
+        cursor.execute(query,(user_id,book_id))
+        conn.commit()
+        query2 = "UPDATE books SET availability = '1' WHERE book_id = %s" 
+        cursor.execute(query2,(book_id,))
+        print(f"User_id: {user_id} successfully checked in book with id number: {book_id}")  
+    except Exception as e: print(f"Error has occured {e}\n Please check that your user_id and the book_id are correct. ")
+
+def search_book(cursor):#search for a book
+    try:
+        keyword = input("Enter the title: ")
+        query = "SELECT id, title, isbn,publication_date, availability FROM books WHERE title like %s"
+        print("Book details: ")
+        cursor.execute(query,('&' + keyword + '%',))
+        books = cursor.fetchone()
+        if books:
+            for book in books:
+                print(book)
+        else: print("Book not found")
+    except Exception as e:
+        print(f"Error {e}")
             
-    def check_out(library,current_loans):#Borrow a book
-        isbn = input("Enter the ISBN of the book to borrow: ")
-        user = input("Enter user name: ")
-        if isbn in library and library[isbn].is_available():
-            current_loans[isbn] = user
-            library[isbn].borrow_book()
-            print(f"Book '{library[isbn].get_title()}' checked out to {user}")
-        else: print("Book not in our system.")
+def display_books(cursor):#display all books
+    try:
+        query = "SELECT * FROM books"
+        print("All books in the system: ")
+        cursor.execute(query)
+        books = cursor.fetchall()
+        if books:
+            for book in books:
+                print(book)
+        else:
+            print("No books found in the system. ")
+    except Exception as e:
+        print(f"Error has occured {e}")
 
-    def search_book(library):#search for a book
-        title = input("Enter the title to search for: ")
-        book_found = False
-        for book in library.values():
-            if book.get_title().lower() == title.lower():
-                availability = "Available" if book.is_available() else "Not Available"
-                print(f"Title: {book.get_title()} Author: {book.get_author()} ISBN: {book.get_isbn()} Status: {availability}  ")#TODO: add is available or not also provide isbn
-                book_found = True
-        if not book_found: print("Book not found")    
-                
-    def display_book(library):#display all books
-        if library:
-            for book in library.values():
-                availability = "Available" if book.is_available() else "Not Available"
-                print(f"Title: {book.get_title()} Author: {book.get_author()} ISBN: {book.get_isbn()} Status: {availability}")
-
-    def book_operation(library,current_loans):
-        while True:
-            print("\n1. Add Book\n2. Check Out\n3. Return Book\n4. Search\n5. Display\n6. Quit")
+    
+            
+            
+def book_operations(conn,cursor):
+    if conn is not None:
+        try:
+            print("\n1. Add a new book\n2. Borrow a book\n3. Return a book\n4. Search for a book\n5. Display all books")
             choice = input("Choose an option: ")
-            try:
-                if choice == '1':
-                    Book.add_book(library)            
-                elif choice == '2':
-                    Book.check_out(library, current_loans)            
-                elif choice == '3':
-                    Book.check_in(library,current_loans)            
-                elif choice == '4':
-                    Book.search_book(library)
-                elif choice == '5':
-                    Book.display_book(library)
-                elif choice == '6':
-                    print("Thank you for using this Book program...")
-                    break       
-                else: print("Invalid choice. Please try again.")
-            except Exception as e:
-                print(f"An error has occured: {e} ")
-
-if __name__ == "__main__":
-    library = {}
-    current_loans = {}                
-    Book.book_operation(library,current_loans)
+            if choice == '1':
+                add_book(cursor,conn)   
+            elif choice == '2':
+                check_out(cursor,conn)            
+            elif choice == '3':
+                check_in(cursor,conn)            
+            elif choice == '4':
+                search_book(cursor)
+            elif choice == '5':
+                display_books(cursor)
+                
+            else: print("Invalid choice. Please try again.")
+        except Exception as e:
+            print(f"An error has occured: {e} ")
+        finally:
+            conn.close()
+            cursor.close()
+            
+                
+                
     

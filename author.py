@@ -1,66 +1,71 @@
-
-class Author:
-    def __init__(self,author,birthday,birthplace,one_book):
-        self.author = author
-        self.birthday = birthday
-        self.birthplace = birthplace
-        self.one_book = one_book
+from connect_sql import connect_database
+  
         
-        
-    def add_author_dets(catalog):    
-        author = input("Enter the name of the author: ").title()
-        birthday = input("Enter the author's birthday: ") 
-        birthplace = input("Enter the author's birthplace: ")
-        one_book = input("Enter a book by the author: ").title()
-        info = Author(author,birthday,birthplace,one_book)
-
-        # save author deets to catalog 
-        catalog[author] = info
-        # or
-        print(f"Author: {author} added to catalog with details. ")
-        # return info so you can use info if your if choice == '1' 
-        return info 
-
-    def view_author_details(catalog,author_name):
-        if author_name in catalog:
-            author = catalog[author_name]
-            print(f"Author: {author.author}, Birthday: {author.birthday}, Birthplace: {author.birthplace}, Book written: {author.one_book}")
+def add_author_dets(cursor,conn):    
+    name = input("Enter the author's name: ")
+    biography = input("Enter a few words about the author")
+    query = "INSERT INTO authors (name,biography) VALUES(%s, %s)"
+    cursor.execute(query,(name,biography))
+    conn.commit()
+    print("New author added successfully. ")
+    
+def view_author_details(cursor):
+    keyword = input("Enter the first name of the author to view details: ")
+    query = "SELECT id, name, biography FROM authors WHERE name like %s"
+    cursor.execute(query,('%' + keyword + '%',))
+    # this is where the query and execute will go
+    print("Author details: (Id,Name,bio)")
+    for author in cursor.fetchone():
+        print(author)
+    
+        #reserch how to use like in workbench
+def display_all(cursor):
+    try:
+        query = "SELECT * FROM authors"
+        print("Here is a list of all of the authors in the system:")
+        cursor.execute(query)
+        authors = cursor.fetchall()
+        if authors:
+            for author in authors:
+                print(author)
+        else:
+            print("No authors found in the system. ")   
+    except Exception as e:
+        print(f"Error has occured {e}")
                 
-        else: print(f"Author {author} not found")
-    def display_all(catalog):
-        if catalog:
-            print("All authors in the catalog:")
-            for author in catalog.values():
-                print(f"Author: {author.author}, Book: {author.one_book} ")
-        else: print("No authors in the system.")
+def delete_author(cursor,conn):
+    keyword = int(input("Enter the id of the author to delete: "))
+    query = "DELETE from authors WHERE id = %s"
+    cursor.execute(query, (keyword,))
+    conn.commit()
+    print(f"Author {keyword} removed successfully.")        
 
-    def author_operations(catalog):
-        while True:
-            print("\n1. Add a new author. \n2. View author details. \n3. Display all authors \n4. Quit")
-            choice = input("Choose an option: ")
-            try:
-                if choice == '1':
-                    # add author deets 
-                    # save author deets to catalog 
-                    # info = add_author_dets(info) 
-                    Author.add_author_dets(catalog) 
+def author_operations(conn,cursor):
+    if conn is not None:
+        try:
+            print("\n1. Add a new author. \n2. View author details. \n3. Display all authors.\n4. Delete an author. ")
+            
+            choice = input("Choose an option: (1-4): ")
+            
+            if choice == '1':
+                
+                add_author_dets(cursor,conn) 
                                 
+            elif choice == '2':
+                view_author_details(cursor)
+                    
+            elif choice == '3':
+                display_all(cursor)
                 
-                elif choice == '2':
-                    selection = input("Enter the author to view details: ").title()
-                    Author.view_author_details(catalog, selection)
+            elif choice == '4':
+                delete_author(cursor)
                     
-                elif choice == '3':
-                    Author.display_all(catalog)
-                    
-                elif choice == '4':
-                    print("Thank you for using this Author program...")
-                    break
-                else: print("Invalid choice Please try again.")
-            except Exception as e:
+            else: print("Invalid choice Please try again.")
+        except Exception as e:
                 print(f"An error has occured: {e}")
+        finally:
+            cursor.close()
+            conn.close()
 
-if __name__ == "__main__":
-    catalog ={}
                
-    Author.author_operations(catalog)
+    
